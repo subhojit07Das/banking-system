@@ -4,8 +4,8 @@ class Bank:
     def __init__(self):
         self.accounts = {}
 
-    def create_account(self, owner, initial_balance):
-        acc = Account(owner, initial_balance)
+    def create_account(self, owner, initial_balance, pin):
+        acc = Account(owner, initial_balance, pin)
         self.accounts[acc.id] = acc
         return acc;
 
