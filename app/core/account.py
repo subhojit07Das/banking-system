@@ -22,3 +22,6 @@ class Account:
         self.balance -= amount
         self.history.append({"type": "withdraw", "amount": amount, "balance_after": self.balance})
         return "Withdrawn Successful"
+    
+    def get_history(self):
+        return self.history
