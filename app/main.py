@@ -1,9 +1,17 @@
 from fastapi import FastAPI
 from app.core.bank import Bank
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
 app = FastAPI()
 bank = Bank()
+
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
+
+@app.get("/ui")
+def ui():
+    return FileResponse("app/static/index.html")
 
 @app.get("/")
 def root():
