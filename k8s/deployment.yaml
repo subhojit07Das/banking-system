@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: banking-system
+  annotations:
+    dev: subhojit
+    mail: subhojit@mail.com
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: banking-system
+  template:
+    metadata:
+      labels:
+        app: banking-system
+    spec:
+      containers:
+      - name: banking-system
+        image: 785667581754.dkr.ecr.ap-south-1.amazonaws.com/banking-system:latest
+        ports:
+        - containerPort: 8000
