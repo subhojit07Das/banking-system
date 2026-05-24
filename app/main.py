@@ -11,6 +11,8 @@ def root():
 
 @app.post("/accounts")
 def create_account(owner: str, initial_balance: float, pin: str):
+    if initial_balance <= 0:
+        return JSONResponse(status_code=400, content={"error": "Initial balance must be greater than zero"})
     acc = bank.create_account(owner, initial_balance, pin)
     return {"id": acc.id, "owner": acc.owner, "balance": acc.balance}
 
@@ -45,7 +47,7 @@ def withdraw(account_id: str, amount: float, pin: str):
         return JSONResponse(status_code=401, content={"error": "Wrong pin"})
     if message == "Amount must be greater than zero":
         return JSONResponse(status_code=400, content={"error": "Amount must be greater than zero"})   
-    if message == "Insufficient Balance":
+    if message == "Insufficient balance":
         return JSONResponse(status_code=400, content={"error": "Insufficient Balance"})
     return {"message": message, "balance": acc.balance}
 
