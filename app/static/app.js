@@ -9,7 +9,17 @@ async function createAccount() {
     );
 
     const data = await response.json();
-    document.getElementById("create-result").innerText = JSON.stringify(data);
+    if (data.id) {
+        document.getElementById("create-result").innerText = 
+            `Account Created! Your ID is ${data.id}. Save this!`
+
+        document.getElementById("owner").value = "";
+        document.getElementById("balance").value = "";
+        document.getElementById("pin").value = "";
+    }
+    else {
+        document.getElementById("create-result").innerText = data.error;
+    }
 }
 
 async function getHistory() {
@@ -22,7 +32,16 @@ async function getHistory() {
     );
 
     const data = await response.json();
-    document.getElementById("history-result").innerText = JSON.stringify(data);
+    if (data.history) {
+    let result = "Transaction History:\n\n";
+    data.history.forEach(t => {
+            result += `${t.type.toUpperCase()} | Amount: ${t.amount} | Balance after: ${t.balance_after}\n`;
+        });
+    document.getElementById("history-result").innerText = result;
+    }
+    else {
+        document.getElementById("history-result").innerText = data.error;
+    }
 }
 
 async function getAccount() {
@@ -35,7 +54,13 @@ async function getAccount() {
     )
 
     const data = await response.json();
-    document.getElementById("get-result").innerText = JSON.stringify(data);
+    if (data.id) {
+    document.getElementById("get-result").innerText = 
+        `Owner: ${data.owner} | Balance: ${data.balance}`
+    }
+    else {
+        document.getElementById("get-result").innerText = data.error;
+    }
 }; 
 
 async function deposit() {
@@ -49,7 +74,17 @@ async function deposit() {
     ) 
 
     const data = await response.json();
-    document.getElementById("deposit-result").innerText = JSON.stringify(data);
+    if (data.message) {
+        document.getElementById("deposit-result").innerText = 
+            `Deposit Successful! New Balance: ${data.balance}`
+
+        document.getElementById("deposit-account-id").value = "";
+        document.getElementById("deposit-amount").value = "";
+        document.getElementById("deposit-pin").value = "";
+    }
+    else {
+        document.getElementById("deposit-result").innerText = data.error;
+    }
 };
 
 async function withdraw() {
@@ -63,5 +98,15 @@ async function withdraw() {
     ) 
 
     const data = await response.json();
-    document.getElementById("withdraw-result").innerText = JSON.stringify(data);
+    if (data.message) {
+        document.getElementById("withdraw-result").innerText = 
+            `Withdrawl Successful! New Balance: ${data.balance}`
+
+        document.getElementById("withdraw-account-id").value = "";
+        document.getElementById("withdraw-amount").value = "";
+        document.getElementById("withdraw-pin").value = "";
+    }
+    else {
+        document.getElementById("withdraw-result").innerText = data.error;
+    }
 };
