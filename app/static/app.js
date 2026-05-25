@@ -13,6 +13,10 @@ async function createAccount() {
         document.getElementById("create-result").innerText = 
             `Account Created! Your ID is ${data.id}. Save this!`
 
+        setTimeout(() => {
+        location.reload();
+        }, 2000);
+
         document.getElementById("owner").value = "";
         document.getElementById("balance").value = "";
         document.getElementById("pin").value = "";
@@ -37,7 +41,13 @@ async function getHistory() {
     data.history.forEach(t => {
             result += `${t.type.toUpperCase()} | Amount: ${t.amount} | Balance after: ${t.balance_after}\n`;
         });
+    
     document.getElementById("history-result").innerText = result;
+
+    setTimeout(() => {
+        location.reload();
+    }, 3000);
+
     }
     else {
         document.getElementById("history-result").innerText = data.error;
@@ -57,6 +67,11 @@ async function getAccount() {
     if (data.id) {
     document.getElementById("get-result").innerText = 
         `Owner: ${data.owner} | Balance: ${data.balance}`
+    
+    setTimeout(() => {
+        location.reload();
+    }, 2000);
+
     }
     else {
         document.getElementById("get-result").innerText = data.error;
@@ -77,6 +92,11 @@ async function deposit() {
     if (data.message) {
         document.getElementById("deposit-result").innerText = 
             `Deposit Successful! New Balance: ${data.balance}`
+
+        setTimeout(() => {
+            document.getElementById("deposit-result").innerText = "";
+            location.reload();
+        }, 2000)
 
         document.getElementById("deposit-account-id").value = "";
         document.getElementById("deposit-amount").value = "";
@@ -102,6 +122,11 @@ async function withdraw() {
         document.getElementById("withdraw-result").innerText = 
             `Withdrawl Successful! New Balance: ${data.balance}`
 
+        setTimeout(() => {
+            document.getElementById("withdraw-result").innerText = "";
+            location.reload();
+        }, 2000)
+
         document.getElementById("withdraw-account-id").value = "";
         document.getElementById("withdraw-amount").value = "";
         document.getElementById("withdraw-pin").value = "";
@@ -116,14 +141,18 @@ async function closeAccount() {
     const pin = document.getElementById("close-password").value;
 
     const response = await fetch (
-        `/accounts/${owner}/?pin=${pin}`,
+        `/accounts/${owner}?pin=${pin}`,
         { method: "DELETE" }
     );
 
     const data = await response.json();
     if (data.message) {
-        document.getElementById("close-result").innerText = 
-            `Account: ${data.message} closed successfully! `
+        document.getElementById("close-result").innerText = data.message;
+
+        setTimeout(() => {
+            document.getElementById("close-result").innerText = "";
+            location.reload();
+        }, 2000)
 
         document.getElementById("close-account-id").value = "";
         document.getElementById("close-password").value = "";
