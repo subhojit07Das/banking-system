@@ -53,6 +53,16 @@
     </div>
 
     <div class="card">
+        <h2>Transfer Money</h2>
+        <input type="text" id="transfer-sender-id" placeholder="Sender ID">
+        <input type="text" id="transfer-receiver-id" placeholder="Receiver ID">
+        <input type="number" id="transfer-amount" placeholder="Amount">
+        <input type="password" id="transfer-password" placeholder="Sender's Password">
+        <button onclick="transfer()">Transfer</button>
+        <p id="transfer-result"></p>
+    </div>
+
+    <div class="card">
         <h2>Close Account</h2>
         <input type="text" id="close-account-id" placeholder="Account ID">
         <input type="password" id="close-password" placeholder="Password">

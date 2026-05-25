@@ -15,7 +15,7 @@ async function createAccount() {
 
         setTimeout(() => {
         location.reload();
-        }, 2000);
+        }, 5000);
 
         document.getElementById("owner").value = "";
         document.getElementById("balance").value = "";
@@ -39,14 +39,14 @@ async function getHistory() {
     if (data.history) {
     let result = "Transaction History:\n\n";
     data.history.forEach(t => {
-            result += `${t.type.toUpperCase()} | Amount: ${t.amount} | Balance after: ${t.balance_after}\n`;
-        });
+        result += `${t.type.toUpperCase()} | Amount: ${parseFloat(t.amount).toFixed(2)} | Balance after: ${parseFloat(t.balance_after).toFixed(2)}\n`;
+});
     
     document.getElementById("history-result").innerText = result;
 
     setTimeout(() => {
         location.reload();
-    }, 3000);
+    }, 5000);
 
     }
     else {
@@ -70,7 +70,7 @@ async function getAccount() {
     
     setTimeout(() => {
         location.reload();
-    }, 2000);
+    }, 5000);
 
     }
     else {
@@ -96,7 +96,7 @@ async function deposit() {
         setTimeout(() => {
             document.getElementById("deposit-result").innerText = "";
             location.reload();
-        }, 2000)
+        }, 5000)
 
         document.getElementById("deposit-account-id").value = "";
         document.getElementById("deposit-amount").value = "";
@@ -125,7 +125,7 @@ async function withdraw() {
         setTimeout(() => {
             document.getElementById("withdraw-result").innerText = "";
             location.reload();
-        }, 2000)
+        }, 5000)
 
         document.getElementById("withdraw-account-id").value = "";
         document.getElementById("withdraw-amount").value = "";
@@ -135,6 +135,37 @@ async function withdraw() {
         document.getElementById("withdraw-result").innerText = data.error;
     }
 };
+
+async function transfer() {
+    const sender = document.getElementById("transfer-sender-id").value;
+    const receiver = document.getElementById("transfer-receiver-id").value;
+    const amount = document.getElementById("transfer-amount").value;
+    const pin = document.getElementById("transfer-password").value;
+
+    const response = await fetch (
+        `/accounts/${sender}/transfer?receiver_id=${receiver}&amount=${amount}&pin=${pin}`,
+        { method: "POST" }
+    )
+
+    const data = await response.json();
+    if (data.message) {
+        document.getElementById("transfer-result").innerText = data.message;
+
+        setTimeout(() => {
+            document.getElementById("transfer-result").innerText = "";
+            location.reload();
+        }, 5000)
+
+        document.getElementById("transfer-sender-id").value = "";
+        document.getElementById("transfer-receiver-id").value = "";
+        document.getElementById("transfer-amount").value = "";
+        document.getElementById("transfer-password").value = "";
+    }
+    else {
+        document.getElementById("transfer-result").innerText = data.error;
+    }
+};
+
 
 async function closeAccount() {
     const owner = document.getElementById("close-account-id").value;
@@ -152,7 +183,7 @@ async function closeAccount() {
         setTimeout(() => {
             document.getElementById("close-result").innerText = "";
             location.reload();
-        }, 2000)
+        }, 5000)
 
         document.getElementById("close-account-id").value = "";
         document.getElementById("close-password").value = "";

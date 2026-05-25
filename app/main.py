@@ -80,3 +80,16 @@ def close_account(account_id: str, pin: str):
     if message == "Withdraw remaining amount first":
         return JSONResponse(status_code=400, content={"error": "Withdraw remaining amount first"})
     return {"message": message}
+
+@app.post("/accounts/{account_id}/transfer")
+def transfer_money(account_id: str, receiver_id: str, amount: float, pin: str):
+    message = bank.transfer(account_id, receiver_id, amount, pin)
+    if message == "Receiver account not found":
+        return JSONResponse(status_code=404, content={"error": "Receiver account not found"})
+    if message == "Wrong pin":
+        return JSONResponse(status_code=401, content={"error": "Wrong pin"})
+    if message == "Amount must be greater than zero":
+        return JSONResponse(status_code=400, content={"error": "Amount must be greater than zero"})
+    if message == "Insufficient balance":
+        return JSONResponse(status_code=400, content={"error": "Insufficient balance"})
+    return {"message": "Transfer Successful"}

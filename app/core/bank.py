@@ -26,6 +26,34 @@ class Bank:
                 return "Account closed successfully"
         else:
             return "Wrong pin"
-    
+        
+    def transfer(self, sender_id, receiver_id, amount, pin):
+        if sender_id not in self.accounts:
+            return "Sender account not found"
+
+        if receiver_id not in self.accounts:
+            return "Receiver account not found"
+        
+        sender = self.accounts[sender_id]
+        receiver = self.accounts[receiver_id]
+
+        if not sender.verify_pin(pin):
+            return "Wrong pin"
+        
+        if amount <= 0:
+            return "Amount must be greater than zero"
+        
+        if amount > sender.balance:
+            return "Insufficient balance"
+
+        sender.balance -= amount
+        receiver.balance += amount
+
+        sender.history.append({"type": "transfer", "from": f"{sender_id}", "amount": amount, "to": f"{receiver_id}", "balance_after": sender.balance})
+
+        receiver.history.append({"type": "transfer_received", "from": f"{sender_id}", "amount": amount, "balance_after": receiver.balance})
+
+        return "Transfer Successful"
+
     def list_account(self):
         return self.accounts.values()
