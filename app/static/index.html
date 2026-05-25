@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banking System</title>
+</head>
+<body>
+    <h1>Banking System</h1>
+
+    <h2>Create Account</h2>
+    <input type="text" id="owner" placeholder="Your Name">
+    <input type="number" id="balance" placeholder="Initial Balance">
+    <input type="password" id="pin" placeholder="Password">
+    <button onclick="createAccount()">Create Account</button>
+    <p id="create-result"></p>
+
+    <h2>Deposit</h2>
+    <input type="text" id="deposit-account-id" placeholder="Account ID">
+    <input type="number" id="deposit-amount" placeholder="Amount">
+    <input type="password" id="deposit-pin" placeholder="Password">
+    <button onclick="deposit()">Deposit</button>
+    <p id="deposit-result"></p>
+
+    <h2>Withdraw</h2>
+    <input type="text" id="withdraw-account-id" placeholder="Account ID">
+    <input type="number" id="withdraw-amount" placeholder="Amount">
+    <input type="password" id="withdraw-pin" placeholder="Password">
+    <button onclick="withdraw()">Withdraw</button>
+    <p id="withdraw-result"></p>
+
+    <h2>Transaction History</h2>
+    <input type="text" id="history-account-id" placeholder="Account ID">
+    <input type="password" id="history-pin" placeholder="PIN">
+    <button onclick="getHistory()">Get History</button>
+    <p id="history-result"></p>
+
+    <h2>Get Account</h2>
+    <input type="text" id="get-account-id" placeholder="Account ID">
+    <input type="password" id="get-password" placeholder="Password">
+    <button onclick="getAccount()">Get Account</button>
+    <p id="get-result"></p>
+
+    <script src="http://localhost:8000/static/app.js"></script>
+</body>
+</html>
