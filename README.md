@@ -1,12 +1,13 @@
 # Banking System
 
-A REST API banking system built with Python and FastAPI, containerized with Docker and deployed on AWS EKS.
+A REST API banking system built with Python and FastAPI, containerized with Docker and deployed on AWS EKS. Includes a simple web UI for interacting with the API.
 
 ## Tech Stack
 
 - **Language**: Python 3.13
 - **Framework**: FastAPI
 - **Server**: Uvicorn
+- **Frontend**: HTML, CSS, JavaScript
 - **Containerization**: Docker
 - **Registry**: AWS ECR
 - **Orchestration**: Kubernetes (AWS EKS)
@@ -14,25 +15,32 @@ A REST API banking system built with Python and FastAPI, containerized with Dock
 ## Features
 
 - Create bank accounts with PIN protection
-- Deposit and withdraw money (PIN required)
+- Deposit money (PIN required)
+- Withdraw money (PIN required)
+- View account details (PIN required)
 - View transaction history (PIN required)
-- Get account details (PIN required)
-- All PINs stored as SHA-256 hashes — never plain text
+- All PINs hashed with SHA-256 — never stored as plain text
+- Proper HTTP status codes (200, 400, 401, 404)
+- Simple web UI for non-technical users
 
 ## Project Structure
 
 ```
 banking-system/
 ├── app/
-│   ├── main.py           # FastAPI entry point and routes
-│   └── core/
-│       ├── account.py    # Account class with deposit, withdraw, history
-│       └── bank.py       # Bank class managing all accounts
+│   ├── main.py               # FastAPI entry point and routes
+│   ├── core/
+│   │   ├── account.py        # Account class with deposit, withdraw, history
+│   │   └── bank.py           # Bank class managing all accounts
+│   └── static/
+│       ├── index.html        # Web UI
+│       ├── style.css         # Styling
+│       └── app.js            # Frontend JavaScript
 ├── tests/
-│   └── test_account.py   # Pytest unit tests
+│   └── test_account.py       # Pytest unit tests
 ├── k8s/
-│   ├── deployment.yaml   # Kubernetes deployment manifest
-│   └── service.yaml      # Kubernetes LoadBalancer service
+│   ├── deployment.yaml       # Kubernetes deployment manifest
+│   └── service.yaml          # Kubernetes LoadBalancer service
 ├── Dockerfile
 ├── requirements.txt
 └── README.md
@@ -65,6 +73,8 @@ pip install -r requirements.txt
 PYTHONPATH=. uvicorn app.main:app --reload
 ```
 
+Visit `http://localhost:8000/ui` for the web UI.
+
 Visit `http://localhost:8000/docs` for the interactive Swagger UI.
 
 ### Run with Docker
@@ -86,6 +96,15 @@ docker run -p 8000:8000 banking-system
 | POST | `/accounts/{id}/deposit` | Deposit money | Yes |
 | POST | `/accounts/{id}/withdraw` | Withdraw money | Yes |
 | GET | `/accounts/{id}/history` | View transaction history | Yes |
+
+## HTTP Status Codes
+
+| Code | Meaning |
+|------|---------|
+| 200 | Success |
+| 400 | Bad request (invalid amount, zero initial balance) |
+| 401 | Unauthorized (wrong PIN) |
+| 404 | Account not found |
 
 ### Example: Create Account
 
@@ -115,6 +134,27 @@ Response:
   "balance": 1500.0
 }
 ```
+
+### Example: Wrong PIN
+
+```bash
+curl -X POST "http://localhost:8000/accounts/ACC1001/deposit?amount=500&pin=wrong"
+```
+
+Response (401):
+```json
+{
+  "error": "Wrong pin"
+}
+```
+
+## Security
+
+- PINs hashed using SHA-256 before storage
+- All sensitive operations require PIN verification
+- Account balance never exposed without valid PIN
+- Initial balance must be greater than zero
+- Negative and zero amounts rejected on deposit/withdraw
 
 ## Running Tests
 
@@ -158,19 +198,19 @@ kubectl apply -f k8s/service.yaml
 kubectl get svc banking-svc
 ```
 
-### Tear Down (avoid charges)
+### Tear Down (avoid AWS charges)
 
 ```bash
 eksctl delete cluster --name=banking-system --region=ap-south-1
 ```
 
-## Security
+## What's Next
 
-- PINs are hashed using SHA-256 before storage
-- All sensitive operations require PIN verification
-- Account balances are never exposed without a valid PIN
-- No plain text credentials stored anywhere
+- PostgreSQL database (persistent storage)
+- JWT authentication (proper login system)
+- CI/CD with GitHub Actions (auto deploy on push)
+- Transfer between accounts
 
 ## Author
 
-Subhojit — built as a learning project covering Python, REST APIs, Docker, and AWS EKS.
+Subhojit — built as a learning project covering Python, REST APIs, Docker, AWS EKS and Kubernetes.
