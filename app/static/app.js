@@ -110,3 +110,25 @@ async function withdraw() {
         document.getElementById("withdraw-result").innerText = data.error;
     }
 };
+
+async function closeAccount() {
+    const owner = document.getElementById("close-account-id").value;
+    const pin = document.getElementById("close-password").value;
+
+    const response = await fetch (
+        `/accounts/${owner}/?pin=${pin}`,
+        { method: "DELETE" }
+    );
+
+    const data = await response.json();
+    if (data.message) {
+        document.getElementById("close-result").innerText = 
+            `Account: ${data.message} closed successfully! `
+
+        document.getElementById("close-account-id").value = "";
+        document.getElementById("close-password").value = "";
+    }
+    else {
+        document.getElementById("close-result").innerText = data.error;
+    }
+}

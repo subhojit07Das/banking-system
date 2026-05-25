@@ -68,3 +68,15 @@ def history(account_id: str, pin: str):
     if result == "Wrong Pin":
         return JSONResponse(status_code=401, content={"error": "Wrong Pin"})
     return {"history": result}
+
+@app.delete("/accounts/{account_id}")
+def close_account(account_id: str, pin: str):
+    acc = bank.get_account(account_id)
+    if acc == "Account not found":
+        return JSONResponse(status_code=404, content={"error": "Account not found"})
+    message = bank.close_account(account_id, pin)
+    if message == "Wrong pin":
+        return JSONResponse(status_code=401, content={"error": "Wrong pin"})
+    if message == "Withdraw remaining amount first":
+        return JSONResponse(status_code=400, content={"error": "Withdraw remaining amount first"})
+    return {"message": message}
