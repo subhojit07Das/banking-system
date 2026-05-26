@@ -9,6 +9,10 @@ bank = Bank()
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
+@app.get("/login")
+def login_page():
+    return FileResponse("app/static/login.html")
+
 @app.get("/ui")
 def ui():
     return FileResponse("app/static/index.html")
