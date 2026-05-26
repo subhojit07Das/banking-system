@@ -17,11 +17,14 @@ A REST API banking system built with Python and FastAPI, containerized with Dock
 - Create bank accounts with PIN protection
 - Deposit money (PIN required)
 - Withdraw money (PIN required)
+- Transfer money between accounts (PIN required)
 - View account details (PIN required)
 - View transaction history (PIN required)
+- Close account (PIN required, balance must be zero)
 - All PINs hashed with SHA-256 — never stored as plain text
 - Proper HTTP status codes (200, 400, 401, 404)
 - Simple web UI for non-technical users
+- Auto page reload after every successful action
 
 ## Project Structure
 
@@ -95,14 +98,16 @@ docker run -p 8000:8000 banking-system
 | GET | `/accounts/{id}` | Get account details | Yes |
 | POST | `/accounts/{id}/deposit` | Deposit money | Yes |
 | POST | `/accounts/{id}/withdraw` | Withdraw money | Yes |
+| POST | `/accounts/{id}/transfer` | Transfer money to another account | Yes |
 | GET | `/accounts/{id}/history` | View transaction history | Yes |
+| DELETE | `/accounts/{id}` | Close account (balance must be zero) | Yes |
 
 ## HTTP Status Codes
 
 | Code | Meaning |
 |------|---------|
 | 200 | Success |
-| 400 | Bad request (invalid amount, zero initial balance) |
+| 400 | Bad request (invalid amount, zero balance, insufficient funds) |
 | 401 | Unauthorized (wrong PIN) |
 | 404 | Account not found |
 
@@ -121,17 +126,16 @@ Response:
 }
 ```
 
-### Example: Deposit
+### Example: Transfer Money
 
 ```bash
-curl -X POST "http://localhost:8000/accounts/ACC1001/deposit?amount=500&pin=1234"
+curl -X POST "http://localhost:8000/accounts/ACC1001/transfer?receiver_id=ACC1002&amount=200&pin=1234"
 ```
 
 Response:
 ```json
 {
-  "message": "Deposit successful",
-  "balance": 1500.0
+  "message": "Transfer Successful"
 }
 ```
 
@@ -148,13 +152,27 @@ Response (401):
 }
 ```
 
+### Example: Close Account
+
+```bash
+curl -X DELETE "http://localhost:8000/accounts/ACC1001?pin=1234"
+```
+
+Response:
+```json
+{
+  "message": "Account closed successfully"
+}
+```
+
 ## Security
 
 - PINs hashed using SHA-256 before storage
 - All sensitive operations require PIN verification
 - Account balance never exposed without valid PIN
 - Initial balance must be greater than zero
-- Negative and zero amounts rejected on deposit/withdraw
+- Negative and zero amounts rejected on all operations
+- Account cannot be closed with remaining balance
 
 ## Running Tests
 
@@ -209,7 +227,6 @@ eksctl delete cluster --name=banking-system --region=ap-south-1
 - PostgreSQL database (persistent storage)
 - JWT authentication (proper login system)
 - CI/CD with GitHub Actions (auto deploy on push)
-- Transfer between accounts
 
 ## Author
 
