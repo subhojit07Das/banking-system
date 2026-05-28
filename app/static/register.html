@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to XYZ Bank</title>
+    <link rel="stylesheet" href="http://localhost:8000/static/register.css">
+</head>
+<body>
+    
+    <div class="register-card">
+        <h2>Register</h2>
+        <input type="text" id="register-owner" placeholder="Your're Full Name">
+        <input type="number" id="register-balance" placeholder="Enter amount (or SKIP)">
+        <input type="password" id="register-pin" placeholder="Password">
+        <button onclick="createAccount()">Create Account</button>
+        <p>Already have an account? <a href="/login" class="no-underline">Login</a></p>
+        <p id="register-result"></p>
+    </div>
+
+    <script src="http://localhost:8000/static/register.js"></script>
+</body>
+</html>

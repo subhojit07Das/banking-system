@@ -1,31 +1,3 @@
-async function createAccount() {
-    const owner = document.getElementById("owner").value;
-    const balance = document.getElementById("balance").value;
-    const pin = document.getElementById("pin").value;
-
-    const response = await fetch(
-        `/accounts?owner=${owner}&initial_balance=${balance}&pin=${pin}`,
-        { method: "POST" }
-    );
-
-    const data = await response.json();
-    if (data.id) {
-        document.getElementById("create-result").innerText = 
-            `Account Created! Your ID is ${data.id}. Save this!`
-
-        setTimeout(() => {
-        location.reload();
-        }, 5000);
-
-        document.getElementById("owner").value = "";
-        document.getElementById("balance").value = "";
-        document.getElementById("pin").value = "";
-    }
-    else {
-        document.getElementById("create-result").innerText = data.error;
-    }
-}
-
 async function getHistory() {
     const owner = document.getElementById("history-account-id").value;
     const pin = document.getElementById("history-pin").value;

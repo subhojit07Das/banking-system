@@ -21,6 +21,10 @@ def ui():
 def root():
     return {"message": "Banking System is running"}
 
+@app.get("/register")
+def register_page():
+    return FileResponse("app/static/register.html")
+
 @app.post("/accounts")
 def create_account(owner: str, initial_balance: float, pin: str):
     if initial_balance <= 0:
