@@ -42,3 +42,12 @@
     margin-top: 10px;
     color: red;
 }
+
+.login-card a {
+    color: #3498db;
+    text-decoration: none !important;
+}
+
+.no-underline {
+  text-decoration: none;
+}
