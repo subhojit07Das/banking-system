@@ -14,7 +14,7 @@ async function login() {
 
         setTimeout(() => {
             window.location.href = "/ui";
-        }, 3000);
+        }, 1000);
     }
     else {
         document.getElementById("login-result").innerText = data.error;

@@ -3,6 +3,7 @@ from app.core.bank import Bank
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+from fastapi.responses import RedirectResponse
 
 app = FastAPI()
 bank = Bank()
@@ -13,13 +14,13 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 def login_page():
     return FileResponse("app/static/login.html")
 
+@app.get("/")
+def root():
+    return RedirectResponse(url="/login")
+
 @app.get("/ui")
 def ui():
     return FileResponse("app/static/index.html")
-
-@app.get("/")
-def root():
-    return {"message": "Banking System is running"}
 
 @app.get("/register")
 def register_page():
@@ -92,6 +93,8 @@ def close_account(account_id: str, pin: str):
 @app.post("/accounts/{account_id}/transfer")
 def transfer_money(account_id: str, receiver_id: str, amount: float, pin: str):
     message = bank.transfer(account_id, receiver_id, amount, pin)
+    if message == "Sender account not found":
+        return JSONResponse(status_code=404, content={"error": "Sender account not found"})
     if message == "Receiver account not found":
         return JSONResponse(status_code=404, content={"error": "Receiver account not found"})
     if message == "Wrong pin":
