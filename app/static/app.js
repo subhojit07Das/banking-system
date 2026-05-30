@@ -1,10 +1,15 @@
 async function getHistory() {
     const owner = document.getElementById("history-account-id").value;
-    const pin = document.getElementById("history-pin").value;
+    const token = localStorage.getItem("token");
 
     const response = await fetch (
-        `/accounts/${owner}/history?pin=${pin}`,
-        { method: "GET"}
+        `/accounts/${owner}/history`,
+        { 
+            method: "GET", 
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        }
     );
 
     const data = await response.json();
@@ -28,11 +33,16 @@ async function getHistory() {
 
 async function getAccount() {
     const owner = document.getElementById("get-account-id").value;
-    const pin = document.getElementById("get-password").value;
+    const token = localStorage.getItem("token");
 
     const response = await fetch (
-        `/accounts/${owner}?pin=${pin}`,
-        { method: "GET" }
+        `/accounts/${owner}`,
+        { 
+            method: "GET", 
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        }
     )
 
     const data = await response.json();
@@ -53,11 +63,16 @@ async function getAccount() {
 async function deposit() {
     const owner = document.getElementById("deposit-account-id").value;
     const amount = document.getElementById("deposit-amount").value;
-    const pin = document.getElementById("deposit-pin").value;
+    const token = localStorage.getItem("token");
 
     const response = await fetch (
-        `/accounts/${owner}/deposit?amount=${amount}&pin=${pin}`,
-        { method: "POST" }
+        `/accounts/${owner}/deposit?amount=${amount}`,
+        { 
+            method: "POST", 
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        }
     ) 
 
     const data = await response.json();
@@ -72,7 +87,6 @@ async function deposit() {
 
         document.getElementById("deposit-account-id").value = "";
         document.getElementById("deposit-amount").value = "";
-        document.getElementById("deposit-pin").value = "";
     }
     else {
         document.getElementById("deposit-result").innerText = data.error;
@@ -82,11 +96,16 @@ async function deposit() {
 async function withdraw() {
     const owner = document.getElementById("withdraw-account-id").value;
     const amount = document.getElementById("withdraw-amount").value;
-    const pin = document.getElementById("withdraw-pin").value;
+    const token = localStorage.getItem("token");
 
     const response = await fetch (
-        `/accounts/${owner}/withdraw?amount=${amount}&pin=${pin}`,
-        { method: "POST" }
+        `/accounts/${owner}/withdraw?amount=${amount}`,
+        { 
+            method: "POST", 
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        }
     ) 
 
     const data = await response.json();
@@ -101,7 +120,6 @@ async function withdraw() {
 
         document.getElementById("withdraw-account-id").value = "";
         document.getElementById("withdraw-amount").value = "";
-        document.getElementById("withdraw-pin").value = "";
     }
     else {
         document.getElementById("withdraw-result").innerText = data.error;
@@ -112,11 +130,16 @@ async function transfer() {
     const sender = document.getElementById("transfer-sender-id").value;
     const receiver = document.getElementById("transfer-receiver-id").value;
     const amount = document.getElementById("transfer-amount").value;
-    const pin = document.getElementById("transfer-password").value;
+    const token = localStorage.getItem("token");
 
     const response = await fetch (
-        `/accounts/${sender}/transfer?receiver_id=${receiver}&amount=${amount}&pin=${pin}`,
-        { method: "POST" }
+        `/accounts/${sender}/transfer?receiver_id=${receiver}&amount=${amount}`,
+        { 
+            method: "POST", 
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        }
     )
 
     const data = await response.json();
@@ -131,7 +154,6 @@ async function transfer() {
         document.getElementById("transfer-sender-id").value = "";
         document.getElementById("transfer-receiver-id").value = "";
         document.getElementById("transfer-amount").value = "";
-        document.getElementById("transfer-password").value = "";
     }
     else {
         document.getElementById("transfer-result").innerText = data.error;
@@ -141,11 +163,16 @@ async function transfer() {
 
 async function closeAccount() {
     const owner = document.getElementById("close-account-id").value;
-    const pin = document.getElementById("close-password").value;
+    const token = localStorage.getItem("token");
 
     const response = await fetch (
-        `/accounts/${owner}?pin=${pin}`,
-        { method: "DELETE" }
+        `/accounts/${owner}`,
+        { 
+            method: "DELETE", 
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        }
     );
 
     const data = await response.json();
@@ -158,7 +185,6 @@ async function closeAccount() {
         }, 5000)
 
         document.getElementById("close-account-id").value = "";
-        document.getElementById("close-password").value = "";
     }
     else {
         document.getElementById("close-result").innerText = data.error;

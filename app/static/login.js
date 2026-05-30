@@ -3,14 +3,16 @@ async function login() {
     const pin = document.getElementById("login-pin").value;
 
     const response = await fetch(
-        `/accounts/${owner}?pin=${pin}`,
-        { method: "GET" }
+        `/login?account_id=${owner}&pin=${pin}`,
+        { method: "POST" }
     );
 
     const data = await response.json();
-       if (data.id) {
+       if (data.access_token) {
         document.getElementById("login-result").innerText = 
             `Login Successful`
+
+        localStorage.setItem("token", data.access_token)
 
         setTimeout(() => {
             window.location.href = "/ui";
