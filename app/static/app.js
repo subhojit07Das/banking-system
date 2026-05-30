@@ -11,7 +11,7 @@ async function getHistory() {
     if (data.history) {
     let result = "Transaction History:\n\n";
     data.history.forEach(t => {
-        result += `${t.type.toUpperCase()} | Amount: ${parseFloat(t.amount).toFixed(2)} | Balance after: ${parseFloat(t.balance_after).toFixed(2)}\n`;
+        result += `${t.type.toUpperCase()} | Amount: ${Number(t.amount).toFixed(2)} | Balance after: ${Number(t.balance_after).toFixed(2)}\n`;
 });
     
     document.getElementById("history-result").innerText = result;
@@ -38,7 +38,7 @@ async function getAccount() {
     const data = await response.json();
     if (data.id) {
     document.getElementById("get-result").innerText = 
-        `Owner: ${data.owner} | Balance: ${data.balance}`
+        `Owner: ${data.owner} | Balance: ${Number(data.balance).toFixed(2)}`
     
     setTimeout(() => {
         location.reload();
@@ -63,7 +63,7 @@ async function deposit() {
     const data = await response.json();
     if (data.message) {
         document.getElementById("deposit-result").innerText = 
-            `Deposit Successful! New Balance: ${data.balance}`
+            `Deposit Successful! New Balance: ${Number(data.balance).toFixed(2)}`
 
         setTimeout(() => {
             document.getElementById("deposit-result").innerText = "";
@@ -92,7 +92,7 @@ async function withdraw() {
     const data = await response.json();
     if (data.message) {
         document.getElementById("withdraw-result").innerText = 
-            `Withdrawl Successful! New Balance: ${data.balance}`
+            `Withdrawl Successful! New Balance: ${Number(data.balance).toFixed(2)}`
 
         setTimeout(() => {
             document.getElementById("withdraw-result").innerText = "";

@@ -1,6 +1,6 @@
 async function createAccount() {
     const owner = document.getElementById("register-owner").value;
-    const balance = document.getElementById("register-balance").value;
+    const balance = document.getElementById("register-balance").value || 0;
     const pin = document.getElementById("register-pin").value;
 
     const response = await fetch(

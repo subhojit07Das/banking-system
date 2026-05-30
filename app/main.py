@@ -28,8 +28,8 @@ def register_page():
 
 @app.post("/accounts")
 def create_account(owner: str, initial_balance: float, pin: str):
-    if initial_balance <= 0:
-        return JSONResponse(status_code=400, content={"error": "Initial balance must be greater than zero"})
+    if initial_balance < 0:
+        return JSONResponse(status_code=400, content={"error": "Initial balance cannot be negative"})
     acc = bank.create_account(owner, initial_balance, pin)
     return {"id": acc.id, "owner": acc.owner, "balance": acc.balance}
 
