@@ -7,13 +7,13 @@
     <link rel="stylesheet" href="http://localhost:8000/static/style.css">
 </head>
 <body>
-    <h1>Banking System</h1>
+    <h1>Hello XYZ's Customer</h1>
 
     <div class="card">
         <h2>Deposit</h2>
         <input type="text" id="deposit-account-id" placeholder="Account ID">
         <input type="number" id="deposit-amount" placeholder="Amount">
-        <input type="password" id="deposit-pin" placeholder="Password">    
+        <input type="password" id="deposit-pin" placeholder="Password" autocomplete="off">    
         <button onclick="deposit()">Deposit</button>
         <p id="deposit-result"></p>
     </div>
@@ -22,7 +22,7 @@
         <h2>Withdraw</h2>
         <input type="text" id="withdraw-account-id" placeholder="Account ID">
         <input type="number" id="withdraw-amount" placeholder="Amount">
-        <input type="password" id="withdraw-pin" placeholder="Password">
+        <input type="password" id="withdraw-pin" placeholder="Password" autocomplete="off">
         <button onclick="withdraw()">Withdraw</button>
         <p id="withdraw-result"></p>
     </div>
@@ -30,7 +30,7 @@
     <div class="card">
         <h2>Transaction History</h2>
         <input type="text" id="history-account-id" placeholder="Account ID">
-        <input type="password" id="history-pin" placeholder="PIN">
+        <input type="password" id="history-pin" placeholder="PIN" autocomplete="off">
         <button onclick="getHistory()">Get History</button>
         <pre id="history-result"></pre>
     </div>
@@ -38,7 +38,7 @@
     <div class="card">
         <h2>Get Account</h2>
         <input type="text" id="get-account-id" placeholder="Account ID">
-        <input type="password" id="get-password" placeholder="Password">
+        <input type="password" id="get-password" placeholder="Password" autocomplete="off">
         <button onclick="getAccount()">Get Account</button>
         <p id="get-result"></p>
     </div>
@@ -48,7 +48,7 @@
         <input type="text" id="transfer-sender-id" placeholder="Sender ID">
         <input type="text" id="transfer-receiver-id" placeholder="Receiver ID">
         <input type="number" id="transfer-amount" placeholder="Amount">
-        <input type="password" id="transfer-password" placeholder="Sender's Password">
+        <input type="password" id="transfer-password" placeholder="Sender's Password" autocomplete="off">
         <button onclick="transfer()">Transfer</button>
         <p id="transfer-result"></p>
     </div>
@@ -56,10 +56,12 @@
     <div class="card">
         <h2>Close Account</h2>
         <input type="text" id="close-account-id" placeholder="Account ID">
-        <input type="password" id="close-password" placeholder="Password">
+        <input type="password" id="close-password" placeholder="Password" autocomplete="off">
         <button onclick="closeAccount()">Close Account</button>
         <p id="close-result"></p>
     </div>
+
+    <a href="/login"><button>Exit</button></a>
 
     <script src="http://localhost:8000/static/app.js"></script>
 </body>
