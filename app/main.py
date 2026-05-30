@@ -31,7 +31,10 @@ def root():
     return RedirectResponse(url="/login")
 
 @app.get("/ui")
-def ui():
+def ui(token: str = Depends(oauth2_scheme)):
+    payload = verify_token(token)
+    if payload is None:
+        return FileResponse(url="/login")
     return FileResponse("app/static/index.html")
 
 @app.get("/register")

@@ -1,8 +1,16 @@
+(function() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        window.location.href = "/login";
+    }
+})();
+
+const token = localStorage.getItem("token");
+
 async function getHistory() {
     const owner = document.getElementById("history-account-id").value;
-    const token = localStorage.getItem("token");
 
-    const response = await fetch (
+    const response = await fetch(
         `/accounts/${owner}/history`,
         { 
             method: "GET", 
@@ -14,17 +22,16 @@ async function getHistory() {
 
     const data = await response.json();
     if (data.history) {
-    let result = "Transaction History:\n\n";
-    data.history.forEach(t => {
-        result += `${t.type.toUpperCase()} | Amount: ${Number(t.amount).toFixed(2)} | Balance after: ${Number(t.balance_after).toFixed(2)}\n`;
-});
-    
-    document.getElementById("history-result").innerText = result;
+        let result = "Transaction History:\n\n";
+        data.history.forEach(t => {
+            result += `${t.type.toUpperCase()} | Amount: ${Number(t.amount).toFixed(2)} | Balance after: ${Number(t.balance_after).toFixed(2)}\n`;
+        });
+        
+        document.getElementById("history-result").innerText = result;
 
-    setTimeout(() => {
-        location.reload();
-    }, 5000);
-
+        setTimeout(() => {
+            location.reload();
+        }, 5000);
     }
     else {
         document.getElementById("history-result").innerText = data.error;
@@ -33,9 +40,8 @@ async function getHistory() {
 
 async function getAccount() {
     const owner = document.getElementById("get-account-id").value;
-    const token = localStorage.getItem("token");
 
-    const response = await fetch (
+    const response = await fetch(
         `/accounts/${owner}`,
         { 
             method: "GET", 
@@ -43,29 +49,27 @@ async function getAccount() {
                 "Authorization": `Bearer ${token}`
             }
         }
-    )
+    );
 
     const data = await response.json();
     if (data.id) {
-    document.getElementById("get-result").innerText = 
-        `Owner: ${data.owner} | Balance: ${Number(data.balance).toFixed(2)}`
-    
-    setTimeout(() => {
-        location.reload();
-    }, 5000);
-
+        document.getElementById("get-result").innerText = 
+            `Owner: ${data.owner} | Balance: ${Number(data.balance).toFixed(2)}`;
+        
+        setTimeout(() => {
+            location.reload();
+        }, 5000);
     }
     else {
         document.getElementById("get-result").innerText = data.error;
     }
-}; 
+}
 
 async function deposit() {
     const owner = document.getElementById("deposit-account-id").value;
     const amount = document.getElementById("deposit-amount").value;
-    const token = localStorage.getItem("token");
 
-    const response = await fetch (
+    const response = await fetch(
         `/accounts/${owner}/deposit?amount=${amount}`,
         { 
             method: "POST", 
@@ -73,17 +77,17 @@ async function deposit() {
                 "Authorization": `Bearer ${token}`
             }
         }
-    ) 
+    );
 
     const data = await response.json();
     if (data.message) {
         document.getElementById("deposit-result").innerText = 
-            `Deposit Successful! New Balance: ${Number(data.balance).toFixed(2)}`
+            `Deposit Successful! New Balance: ${Number(data.balance).toFixed(2)}`;
 
         setTimeout(() => {
             document.getElementById("deposit-result").innerText = "";
             location.reload();
-        }, 5000)
+        }, 5000);
 
         document.getElementById("deposit-account-id").value = "";
         document.getElementById("deposit-amount").value = "";
@@ -91,14 +95,13 @@ async function deposit() {
     else {
         document.getElementById("deposit-result").innerText = data.error;
     }
-};
+}
 
 async function withdraw() {
     const owner = document.getElementById("withdraw-account-id").value;
     const amount = document.getElementById("withdraw-amount").value;
-    const token = localStorage.getItem("token");
 
-    const response = await fetch (
+    const response = await fetch(
         `/accounts/${owner}/withdraw?amount=${amount}`,
         { 
             method: "POST", 
@@ -106,17 +109,17 @@ async function withdraw() {
                 "Authorization": `Bearer ${token}`
             }
         }
-    ) 
+    );
 
     const data = await response.json();
     if (data.message) {
         document.getElementById("withdraw-result").innerText = 
-            `Withdrawl Successful! New Balance: ${Number(data.balance).toFixed(2)}`
+            `Withdrawal Successful! New Balance: ${Number(data.balance).toFixed(2)}`;
 
         setTimeout(() => {
             document.getElementById("withdraw-result").innerText = "";
             location.reload();
-        }, 5000)
+        }, 5000);
 
         document.getElementById("withdraw-account-id").value = "";
         document.getElementById("withdraw-amount").value = "";
@@ -124,15 +127,14 @@ async function withdraw() {
     else {
         document.getElementById("withdraw-result").innerText = data.error;
     }
-};
+}
 
 async function transfer() {
     const sender = document.getElementById("transfer-sender-id").value;
     const receiver = document.getElementById("transfer-receiver-id").value;
     const amount = document.getElementById("transfer-amount").value;
-    const token = localStorage.getItem("token");
 
-    const response = await fetch (
+    const response = await fetch(
         `/accounts/${sender}/transfer?receiver_id=${receiver}&amount=${amount}`,
         { 
             method: "POST", 
@@ -140,7 +142,7 @@ async function transfer() {
                 "Authorization": `Bearer ${token}`
             }
         }
-    )
+    );
 
     const data = await response.json();
     if (data.message) {
@@ -149,7 +151,7 @@ async function transfer() {
         setTimeout(() => {
             document.getElementById("transfer-result").innerText = "";
             location.reload();
-        }, 5000)
+        }, 5000);
 
         document.getElementById("transfer-sender-id").value = "";
         document.getElementById("transfer-receiver-id").value = "";
@@ -158,14 +160,12 @@ async function transfer() {
     else {
         document.getElementById("transfer-result").innerText = data.error;
     }
-};
-
+}
 
 async function closeAccount() {
     const owner = document.getElementById("close-account-id").value;
-    const token = localStorage.getItem("token");
 
-    const response = await fetch (
+    const response = await fetch(
         `/accounts/${owner}`,
         { 
             method: "DELETE", 
@@ -181,9 +181,9 @@ async function closeAccount() {
 
         setTimeout(() => {
             document.getElementById("close-result").innerText = "";
-            localStorage.removeItem("token")
-            window.location.href = "/login"
-        }, 5000)
+            localStorage.removeItem("token");
+            window.location.href = "/login";
+        }, 5000);
 
         document.getElementById("close-account-id").value = "";
     }
