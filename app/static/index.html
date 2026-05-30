@@ -55,7 +55,7 @@
         <p id="close-result"></p>
     </div>
     
-    <button onclick="window.location.href='/login'">Exit</button>
+    <button onclick="localStorage.removeItem('token'); location.href='/login'">Exit</button>
     
     <script src="/static/app.js"></script>
 </body>

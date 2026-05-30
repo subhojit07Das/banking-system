@@ -181,7 +181,8 @@ async function closeAccount() {
 
         setTimeout(() => {
             document.getElementById("close-result").innerText = "";
-            location.reload();
+            localStorage.removeItem("token")
+            window.location.href = "/login"
         }, 5000)
 
         document.getElementById("close-account-id").value = "";
