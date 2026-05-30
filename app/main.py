@@ -1,12 +1,19 @@
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from app.core.bank import Bank
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from fastapi.responses import RedirectResponse
+import os
 
+load_dotenv()
 app = FastAPI()
 bank = Bank()
+
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = os.getenv("ALGORITHM")
+ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
