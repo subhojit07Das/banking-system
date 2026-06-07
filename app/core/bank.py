@@ -1,53 +1,119 @@
-from app.core.account import Account
+from sqlalchemy.orm import Session
+from app.core.models import Account, Transaction
+import bcrypt
+import uuid
 
-class Bank:
-    def __init__(self):
-        self.accounts = {}
+def hash_pin(pin: str) -> str:
+    return bcrypt.hashpw(pin.encode(), bcrypt.gensalt()).decode('utf-8')
 
-    def create_account(self, owner, initial_balance, pin):
-        acc = Account(owner, initial_balance, pin)
-        self.accounts[acc.id] = acc
-        return acc;
+def verify_pin(pin: str, hashed: bytes) -> bool:
+    return  bcrypt.checkpw(pin.encode(), hashed.encode())
 
-    def get_account(self, account_id):
-        if account_id in self.accounts:
-            return self.accounts[account_id]
-        return "Account not found"
+def create_account(db: Session, owner: str, initial_balance: float, pin: str):
+    acc_id = "ACC" + str(uuid.uuid4())[:8]
+    account = Account (
+        id = acc_id,
+        owner = owner,
+        balance = initial_balance,
+        pin = hash_pin(pin),
+    )
+
+    db.add(account)
+    db.commit()
+    db.refresh(account)
+
+    return account
+
+def get_account(db: Session, account_id: str):
+    return db.query(Account).filter(Account.id == account_id).first()
+
+def close_account(db: Session, account: Account):
+    if account.balance > 0:
+        return "Withdraw remaining amount first"
     
-    def close_account(self, account_id):
-        if account_id not in self.accounts:
-            return "Account no found"
-        acc = self.accounts[account_id]
-        if acc.balance > 0:
-            return "Withdraw remaining amount first"
-        if acc.balance == 0:
-            del self.accounts[account_id]
-            return "Account closed successfully"
-        
-    def transfer(self, sender_id, receiver_id, amount):
-        if sender_id not in self.accounts:
-            return "Sender account not found"
+    db.delete(account)
+    db.commit()
+    
+    return "Account closed successfully"
 
-        if receiver_id not in self.accounts:
-            return "Receiver account not found"
-        
-        sender = self.accounts[sender_id]
-        receiver = self.accounts[receiver_id]
+def deposit(db: Session, account: Account, amount: float):
+    if amount <= 0:
+        return "Amount should be greater than 0"
+    
+    account.balance += amount
+    
+    gen_id = str(uuid.uuid4()) 
+    transaction = Transaction(
+        id = gen_id,
+        account_id = account.id,
+        type = "DEPOSIT",
+        amount = amount,
+        balance_after = account.balance
+    )
 
-        if amount <= 0:
-            return "Amount must be greater than zero"
-        
-        if amount > sender.balance:
-            return "Insufficient balance"
+    db.add(transaction)
+    db.commit()
+    db.refresh(account)
 
-        sender.balance -= amount
-        receiver.balance += amount
+    return "Deposit successful"
 
-        sender.history.append({"type": "transfer", "from": f"{sender_id}", "amount": amount, "to": f"{receiver_id}", "balance_after": sender.balance})
+def withdraw(db: Session, account: Account, amount: float):
+    if amount <= 0:
+        return "Amount should be greater than 0"
+    
+    if amount > account.balance:
+        return "Insufficient balance"
+    
 
-        receiver.history.append({"type": "transfer_received", "from": f"{sender_id}", "amount": amount, "balance_after": receiver.balance})
+    account.balance -= amount
 
-        return "Transfer Successful"
+    transaction = Transaction(
+        id = str(uuid.uuid4()),
+        account_id = account.id,
+        type = "WITHDRAW",
+        amount = amount,
+        balance_after = account.balance
+    )
 
-    def list_account(self):
-        return self.accounts.values()
+    db.add(transaction)
+    db.commit()
+    db.refresh(account)
+
+    return "Withdraw successful"
+
+def transfer(db: Session, sender: Account, receiver: Account, amount: float):
+    if amount <= 0:
+        return "The amount cannot be below 0"
+    
+    if sender.balance < amount:
+        return "Insufficient balance"
+    
+    sender.balance -= amount
+    receiver.balance += amount
+
+    sender_txn = Transaction (
+        id = str(uuid.uuid4()),
+        account_id = sender.id,
+        type = "TRANSFER",
+        amount = amount,
+        related_account = receiver.id,
+        balance_after = sender.balance
+    )
+
+    receiver_txn = Transaction (
+        id = str(uuid.uuid4()),
+        account_id = receiver.id,
+        type = "TRANSFER_RECEIVED",
+        amount = amount,
+        related_account = sender.id,
+        balance_after = receiver.balance
+    )
+
+    db.add(sender_txn)
+    db.add(receiver_txn)
+    db.commit()
+
+    return "Transfer Successful"
+
+def get_history(account: Account):
+    return account.transactions
